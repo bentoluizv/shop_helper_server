@@ -8,5 +8,7 @@ server.get("/", (req, res) => {
 });
 
 server.listen(PORT, () =>
-  console.log(`Server is running on ${PORT}, ${Date.now()}`)
+  console.log(
+    `Server is running on ${PORT}, ${new Date().toLocaleDateString()}`
+  )
 );
