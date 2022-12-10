@@ -13,16 +13,22 @@ services:
       - 5432:5432
     volumes:
       - data:/var/lib/postgresql
-  
-  server:
+      
+  api:
+    container_name: node-api-container
     build: .
-    image: server
+    image: node-api:latest
+    restart: always
     environment:
-      - DATABASE_URL="postgresql://postgres:postgres@postgres:5432/db?schema=public"
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/db?schema=public
+      - NODE_ENV=development
     volumes:
-      - .:/app:rw
+      - ./dist:/app/src/dist:rw
+      - ./package.json:/app/src/package.json:rw
+      - ./prisma/:/app/src/prisma:rw
+      - ./tsconfig.json:/app/src/tsconfig.json:rw
+    command: sh -c "yarn && npx nodemon dist/server.js"
     ports:
       - 3000:3000
     depends_on:
       - postgres
-
