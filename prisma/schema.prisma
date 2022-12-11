@@ -10,10 +10,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Item {
-  id         String   @id @default(uuid())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  name       String
-  price      Float
+model ShoppingList {
+  id        String             @id @default(uuid())
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  status    String
+  items     ShoppingListItem[]
+}
+
+model ShoppingListItem {
+  id             Int           @id @default(autoincrement())
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  shoppingListId String?
+  productId      String
+  quantity       Float
+  product        Product       @relation(fields: [productId], references: [id])
+  ShoppingList   ShoppingList? @relation(fields: [shoppingListId], references: [id])
+}
+
+model Product {
+  id               String             @id @default(uuid())
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  name             String
+  price            Float
+  ShoppingListItem ShoppingListItem[]
 }
