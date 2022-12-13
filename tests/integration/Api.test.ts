@@ -1,4 +1,4 @@
-describe("Api unit test", () => {
+describe("Api integration test", () => {
   const URL = "localhost";
   const PORT = process.env.PORT || 3000;
   it("Should fetch / route", async () => {
@@ -6,5 +6,3 @@ describe("Api unit test", () => {
     expect(response.status).toBe(200);
   });
 });
-
-export {};
