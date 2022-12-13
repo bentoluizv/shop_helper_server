@@ -3,32 +3,21 @@ volumes:
 
 services:
   postgres:
-    container_name: postgres
-    image: postgres:latest
+    image: postgres:15
     environment:
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=db
+      - POSTGRES_PASSWORD=psqldev
     ports:
       - 5432:5432
     volumes:
       - data:/var/lib/postgresql
-      
-  api:
-    container_name: node-api-container
+  app:
     build: .
-    image: node-api:latest
-    restart: always
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/db?schema=public
       - NODE_ENV=development
+      - DATABASE_URL=postgres://postgres:psqldev@localhost:5432
     volumes:
-      - ./dist:/app/src/dist:rw
-      - ./package.json:/app/src/package.json:rw
-      - ./prisma/:/app/src/prisma:rw
-      - ./babel.config.js:/app/src/babel.config.js:rw
-
-    command: sh -c "yarn && npx nodemon dist/src/server.js"
+      - ./dist:/app/src/dist:ro
+    command: npx nodemon dist/server.js
     ports:
       - 3000:3000
     depends_on:
