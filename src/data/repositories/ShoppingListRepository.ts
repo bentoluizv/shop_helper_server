@@ -1,6 +1,5 @@
 import { type PrismaClient } from "@prisma/client";
 import { ShoppingList } from "../../domain/ShoppingList";
-import { ShoppingListItem } from "../../domain/ShoppingListItem";
 import { shoppingItemArrayMapping } from "../../utils/arrayMapping";
 import { Status } from "../../utils/types";
 import { Repository } from "../Repository";
