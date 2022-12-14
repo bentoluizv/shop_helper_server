@@ -1,11 +1,13 @@
 import { type PrismaClient } from "@prisma/client";
 import { ShoppingList } from "../../domain/ShoppingList";
 import { ShoppingListItem } from "../../domain/ShoppingListItem";
+import { shoppingItemArrayMapping } from "../../utils/arrayMapping";
 import { Status } from "../../utils/types";
 import { Repository } from "../Repository";
 
 export class ShoppingListRepository implements Repository<ShoppingList> {
   constructor(private DB: PrismaClient) {}
+
   async save(list: ShoppingList): Promise<ShoppingList> {
     const savedList = await this.DB.shoppingList.create({
       data: {
@@ -21,21 +23,36 @@ export class ShoppingListRepository implements Repository<ShoppingList> {
       },
     });
 
-    const items = savedList.items.map(({ id, name, quantity }) => {
-      return { id, name, quantity };
-    });
-    const mappedItems = new Map<number, Omit<ShoppingListItem, "id">>(
-      items.map(({ id, ...item }) => [id, item])
-    );
-
     return new ShoppingList({
       id: savedList.id,
       createdAt: savedList.createdAt,
       status: savedList.status as Status,
-      items: mappedItems,
+      items: shoppingItemArrayMapping(savedList.items),
     });
   }
-  get(id: string): Promise<ShoppingList> {
-    throw new Error("Method not implemented.");
+
+  async get(idToGet: string): Promise<ShoppingList> {
+    const data = await this.DB.shoppingList.findFirstOrThrow({
+      where: { id: idToGet },
+      include: {
+        items: true,
+      },
+    });
+    return new ShoppingList({
+      id: data.id,
+      status: data.status as Status,
+      createdAt: data.createdAt,
+      items: shoppingItemArrayMapping(data.items),
+    });
+  }
+
+  async delete(idToDelete: string): Promise<string> {
+    const { id } = await this.DB.shoppingList.delete({
+      where: {
+        id: idToDelete,
+      },
+      select: { id: true },
+    });
+    return id;
   }
 }
