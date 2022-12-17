@@ -7,6 +7,22 @@ import { Repository } from "../Repository";
 export class ShoppingListRepository implements Repository<ShoppingList> {
   constructor(private DB: PrismaClient) {}
 
+  async get(idToGet: string): Promise<ShoppingList | undefined> {
+    const data = await this.DB.shoppingList.findUnique({
+      where: { id: idToGet },
+      include: {
+        items: true,
+      },
+    });
+    if (!data) return;
+    return new ShoppingList({
+      id: data.id,
+      status: data.status as Status,
+      createdAt: data.createdAt,
+      items: shoppingItemArrayMapping(data.items),
+    });
+  }
+
   async save(list: ShoppingList): Promise<ShoppingList> {
     const savedList = await this.DB.shoppingList.create({
       data: {
@@ -27,21 +43,6 @@ export class ShoppingListRepository implements Repository<ShoppingList> {
       createdAt: savedList.createdAt,
       status: savedList.status as Status,
       items: shoppingItemArrayMapping(savedList.items),
-    });
-  }
-
-  async get(idToGet: string): Promise<ShoppingList> {
-    const data = await this.DB.shoppingList.findFirstOrThrow({
-      where: { id: idToGet },
-      include: {
-        items: true,
-      },
-    });
-    return new ShoppingList({
-      id: data.id,
-      status: data.status as Status,
-      createdAt: data.createdAt,
-      items: shoppingItemArrayMapping(data.items),
     });
   }
 
