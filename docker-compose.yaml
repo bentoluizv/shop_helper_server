@@ -13,11 +13,12 @@ services:
   app:
     build: .
     environment:
-      - NODE_ENV=development
-      - DATABASE_URL=postgres://postgres:psqldev@localhost:5432
+      - DATABASE_URL=postgres://postgres:psqldev@postgres:5432
     volumes:
       - ./dist:/app/src/dist:ro
-    command: npx node dist/server.js
+      - ./prisma:/app/src/prisma:ro
+      - ./.env:/app/src/.env:ro
+    command: bash -c "npx prisma db push && npx nodemon dist/server.js"
     ports:
       - 3000:3000
     depends_on:
