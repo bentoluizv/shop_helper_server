@@ -17,19 +17,19 @@ describe("Shopping List database repository integration test", () => {
   list.addItem(café);
   list.addItem(filtro);
 
-  it("Should save an shopping list", async () => {
+  it("Should save a shopping list", async () => {
     const savedList = await repository.save(list);
     expect(savedList.id).toBe(list.id);
   });
 
-  it("Should get an shopping list", async () => {
+  it("Should get a shopping list", async () => {
     const shoppingList = await repository.get(
       "5aae8b7b-dd61-4fc1-acd0-ecd484eec8f9"
     );
     expect(shoppingList).toBeInstanceOf(ShoppingList);
   });
 
-  it("Should delete an shopping list", async () => {
+  it("Should delete a shopping list", async () => {
     const list = await repository.delete(
       "5aae8b7b-dd61-4fc1-acd0-ecd484eec8f9"
     );
