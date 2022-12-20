@@ -1,10 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import express from "express";
 import { ShoppingListRepository } from "./data/repositories/ShoppingListRepository";
-import { ShoppingList } from "./domain/ShoppingList";
-import { ShoppingListItem } from "./domain/ShoppingListItem";
 import { ShoppingListService } from "./services/ShoppingListService";
-import { Status } from "./utils/types";
+import { createNewList } from "./usecases/createNewList";
+import { deleteList } from "./usecases/deleteList";
+import { getListById } from "./usecases/getListbyId";
 
 const PORT = process.env.PORT || 3000;
 const server = express();
@@ -20,22 +20,18 @@ server.get("/", (_, res) => {
 });
 2;
 server.post("/list", async (req, res) => {
-  const response: {
-    id: string;
-    status: Status;
-    items: Array<ShoppingListItem>;
-  } = req.body;
+  const savedListData = await createNewList(req.body, service);
+  res.status(201).json(savedListData);
+});
 
-  const list = new ShoppingList({ id: response.id, status: response.status });
+server.get("/list/:id", async (req, res) => {
+  const savedListData = await getListById(req.params.id, service);
+  res.status(201).json(savedListData);
+});
 
-  for (const item of response.items) {
-    list.addItem(item);
-  }
-
-  const savedData = await service.createNewList(list);
-  const { id, createdAt, status, items } = savedData;
-  const data = { id, createdAt, status, items: Object.fromEntries(items) };
-  res.status(201).json(data);
+server.delete("/list/:id", async (req, res) => {
+  await deleteList(req.params.id, service);
+  res.status(204).end();
 });
 
 server.listen(PORT, () =>
