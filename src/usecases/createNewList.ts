@@ -12,11 +12,12 @@ export const createNewList = async (
   }
   const savedList = await service.createNewList(list);
   const { id, createdAt, status, items } = savedList;
+
   const SavedData = {
     id,
     createdAt,
     status,
-    items: Array.from(items),
+    items: [...items.values()],
   };
   return SavedData;
 };

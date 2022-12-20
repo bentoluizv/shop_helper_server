@@ -7,12 +7,11 @@ export const getListById = async (
 ) => {
   const { id, createdAt, status, items }: ShoppingList =
     await service.getListById(uuid);
-
   const savedData = {
     id,
     createdAt,
     status,
-    items: Array.from(items),
+    items: [...items.values()],
   };
 
   return savedData;
