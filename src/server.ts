@@ -20,13 +20,9 @@ server.use(function (
   res: Response,
   next: NextFunction
 ) {
-  if (e.message === "Post already exists") {
-    return res.status(409).send(e.message);
-  }
-  if (e.message === "Post not found") {
-    return res.status(404).send(e.message);
-  }
-  res.status(500).send(e.message);
+  if (e.message == "List not found!") res.status(404).json(e.message);
+  if (e.message == "List already exists!") res.status(409).json(e.message);
+  res.status(500).end();
 });
 
 server.listen(PORT, () =>
