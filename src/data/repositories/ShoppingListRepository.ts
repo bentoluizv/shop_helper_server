@@ -1,6 +1,6 @@
 import { type PrismaClient } from "@prisma/client";
 import { ShoppingList } from "../../domain/ShoppingList";
-import { shoppingItemArrayMapping } from "../../utils/arrayMapping";
+import { arrayToMap } from "../../utils/arrayMapping";
 import { Status } from "../../utils/types";
 import { Repository } from "../Repository";
 
@@ -19,7 +19,7 @@ export class ShoppingListRepository implements Repository<ShoppingList> {
       id: data.id,
       status: data.status as Status,
       createdAt: data.createdAt,
-      items: shoppingItemArrayMapping(data.items),
+      items: arrayToMap(data.items),
     });
   }
 
@@ -42,7 +42,7 @@ export class ShoppingListRepository implements Repository<ShoppingList> {
       id: savedList.id,
       createdAt: savedList.createdAt,
       status: savedList.status as Status,
-      items: shoppingItemArrayMapping(savedList.items),
+      items: arrayToMap(savedList.items),
     });
   }
 
