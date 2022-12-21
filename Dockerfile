@@ -4,6 +4,6 @@ COPY package*.json ./
 RUN npm ci --omit=dev
 COPY ./dist .
 COPY ./prisma .
-EXPOSE 3000
+EXPOSE 8080
 ENV DATABASE_URL=postgres://postgres:postgrespw@postgres:5432
 CMD [ "node", "server.js" ]

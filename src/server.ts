@@ -4,7 +4,7 @@ import { ShoppingListRepository } from "./data/repositories/ShoppingListReposito
 import { shoppingListRouter } from "./routes/ShoppingListRoute";
 import { ShoppingListService } from "./services/ShoppingListService";
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 const server = express();
 
 const DB = new PrismaClient();
