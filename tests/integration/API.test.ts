@@ -75,17 +75,18 @@ describe("API Test", () => {
     expect(response2.status).toBe(409);
     expect(response2.data).toBe("List already exists!");
   });
+
+  it("Should DELETE /list/:id route and delete a list by id", async () => {
+    const response = await request(
+      "http://localhost:3000/list/fe57fdc2-6740-4c61-9987-1sad7c703k8y",
+      "delete"
+    );
+    expect(response.status).toBe(204);
+    const response2 = await request(
+      "http://localhost:3000/list/ffdce572-674c61-90-4987-sad17c703k8y",
+      "delete"
+    );
+    expect(response2.status).toBe(204);
+  });
 });
 
-it("Should DELETE /list/:id route and delete a list by id", async () => {
-  const response = await request(
-    "http://localhost:3000/list/fe57fdc2-6740-4c61-9987-1sad7c703k8y",
-    "delete"
-  );
-  expect(response.status).toBe(204);
-  const response2 = await request(
-    "http://localhost:3000/list/ffdce572-674c61-90-4987-sad17c703k8y",
-    "delete"
-  );
-  expect(response2.status).toBe(204);
-});
